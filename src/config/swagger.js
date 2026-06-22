@@ -1,5 +1,6 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 const config = require('./config');
 
 const options = {
@@ -16,12 +17,13 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${config.port}${config.apiPrefix}`,
-        description: 'Development server',
-      },
-      {
-        url: `https://api.nanos.com${config.apiPrefix}`,
-        description: 'Production server',
+        // Auto-detect server URL based on environment
+        url: process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}${config.apiPrefix || '/api/v1'}`
+          : process.env.API_URL 
+          ? `${process.env.API_URL}${config.apiPrefix || '/api/v1'}`
+          : `http://localhost:${config.port || 5000}${config.apiPrefix || '/api/v1'}`,
+        description: process.env.VERCEL_URL ? 'Production (Vercel)' : 'Local Development',
       },
     ],
     components: {
@@ -158,19 +160,36 @@ const options = {
       },
     ],
   },
-  apis: ['./src/routes/*.js'],
+  // Use absolute path that works in both local and Vercel
+  apis: [
+    path.resolve(__dirname, '../routes/**/*.js'),
+    path.resolve(__dirname, '../routes/*.js'),
+  ],
 };
 
 const specs = swaggerJsdoc(options);
 
+// Log the generated spec for debugging
+console.log(`📚 Swagger spec generated with ${Object.keys(specs.paths || {}).length} paths`);
+
 const swaggerSetup = (app) => {
+  // Add a route to serve the raw JSON spec for debugging
+  app.get('/api-docs.json', (req, res) => {
+    res.json(specs);
+  });
+
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     explorer: true,
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'Nanos E-Commerce API Documentation',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+    },
   }));
 
-  console.log(`📚 Swagger documentation available at http://localhost:${config.port}/api-docs`);
+  console.log(`📚 Swagger documentation available at /api-docs`);
+  console.log(`📄 Swagger JSON spec available at /api-docs.json`);
 };
 
 module.exports = swaggerSetup;
