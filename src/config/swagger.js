@@ -20,7 +20,7 @@ const options = {
       {
         // Auto-detect server URL based on environment
         url: process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
+          ? `https://nanos-ten.vercel.app`
           : process.env.API_URL
             ? `${process.env.API_URL}`
             : `http://localhost:${config.port || 5000}`,
