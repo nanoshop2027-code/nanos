@@ -33,6 +33,14 @@ const customerCheckoutRoutes = require('./routes/customerCheckoutRoutes');
 const customerOrderRoutes = require('./routes/customerOrderRoutes');
 const customerSettingsRoutes = require('./routes/customerSettingsRoutes');
 
+// Admin event booking routes
+const adminCelebrationTypeRoutes = require('./routes/adminCelebrationTypeRoutes');
+const adminEventBookingRoutes = require('./routes/adminEventBookingRoutes');
+
+// Customer event booking routes
+const customerCelebrationTypeRoutes = require('./routes/customerCelebrationTypeRoutes');
+const customerEventBookingRoutes = require('./routes/customerEventBookingRoutes');
+
 const app = express();
 
 // Security middleware
@@ -92,6 +100,14 @@ app.use(`${config.apiPrefix}/customer/custom-cups`, customerCustomCupRoutes);
 app.use(`${config.apiPrefix}/customer/checkout`, customerCheckoutRoutes);
 app.use(`${config.apiPrefix}/customer/orders`, customerOrderRoutes);
 app.use(`${config.apiPrefix}/customer/settings`, customerSettingsRoutes);
+
+// Admin event booking routes
+app.use(`${config.apiPrefix}/admin/celebration-types`, adminCelebrationTypeRoutes);
+app.use(`${config.apiPrefix}/admin/event-bookings`, adminEventBookingRoutes);
+
+// Customer event booking routes
+app.use(`${config.apiPrefix}/customer/celebration-types`, customerCelebrationTypeRoutes);
+app.use(`${config.apiPrefix}/customer/event-bookings`, customerEventBookingRoutes);
 
 // Swagger documentation
 swaggerSetup(app);

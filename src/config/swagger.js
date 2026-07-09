@@ -223,6 +223,79 @@ const options = {
             },
           },
         },
+        CelebrationType: {
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            name: { type: "string", example: "Birthday" },
+            image: { type: "string", nullable: true },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        EventBooking: {
+          type: "object",
+          description:
+            "A customer-submitted event booking request. The backend only stores the request; it does not send WhatsApp messages.",
+          properties: {
+            _id: { type: "string" },
+            bookingNumber: { type: "string", example: "EVT-20260709-00001" },
+            user: { type: "string", description: "User ID of the customer who submitted the booking" },
+            celebrationType: {
+              oneOf: [
+                { type: "string" },
+                { $ref: "#/components/schemas/CelebrationType" },
+              ],
+              description: "Celebration type ID (or populated object). Null when customCelebrationType is used.",
+              nullable: true,
+            },
+            customCelebrationType: {
+              type: "string",
+              nullable: true,
+              description: "Free-text celebration type provided when the customer selects \"Other\"",
+            },
+            eventDate: { type: "string", format: "date-time" },
+            guestsRange: {
+              type: "string",
+              enum: ["50-100", "100-200", "200-500", "500+"],
+            },
+            customerInfo: {
+              type: "object",
+              properties: {
+                fullName: { type: "string" },
+                phone: { type: "string" },
+                city: { type: "string" },
+                notes: { type: "string", nullable: true, description: "Customer-submitted additional notes" },
+              },
+            },
+            status: {
+              type: "string",
+              enum: ["pending", "contacted", "confirmed", "cancelled", "completed"],
+              default: "pending",
+            },
+            actualNumberOfGuests: {
+              type: "integer",
+              nullable: true,
+              description: "Set by the admin after communicating with the customer",
+            },
+            internalNotes: {
+              type: "string",
+              nullable: true,
+              description: "Admin-only notes, separate from the customer's submitted notes",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Pagination: {
+          type: "object",
+          properties: {
+            currentPage: { type: "integer", example: 1 },
+            totalPages: { type: "integer", example: 5 },
+            totalItems: { type: "integer", example: 42 },
+            limit: { type: "integer", example: 10 },
+          },
+        },
         Contact: {
           type: "object",
           properties: {
@@ -346,6 +419,22 @@ const options = {
       {
         name: "Admin - Dashboard",
         description: "Admin dashboard statistics",
+      },
+      {
+        name: "Admin - Celebration Types",
+        description: "Admin management of event celebration types (Birthday, Wedding, etc.)",
+      },
+      {
+        name: "Customer - Celebration Types",
+        description: "Browse available event celebration types",
+      },
+      {
+        name: "Admin - Event Bookings",
+        description: "Admin management of event booking requests",
+      },
+      {
+        name: "Customer - Event Bookings",
+        description: "Submit and track event booking requests",
       },
     ],
   },

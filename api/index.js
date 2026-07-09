@@ -33,6 +33,14 @@ const customerCheckoutRoutes = require('../src/routes/customerCheckoutRoutes');
 const customerOrderRoutes = require('../src/routes/customerOrderRoutes');
 const customerSettingsRoutes = require('../src/routes/customerSettingsRoutes');
 
+// Admin event booking routes
+const adminCelebrationTypeRoutes = require('../src/routes/adminCelebrationTypeRoutes');
+const adminEventBookingRoutes = require('../src/routes/adminEventBookingRoutes');
+
+// Customer event booking routes
+const customerCelebrationTypeRoutes = require('../src/routes/customerCelebrationTypeRoutes');
+const customerEventBookingRoutes = require('../src/routes/customerEventBookingRoutes');
+
 const app = express();
 
 // Security middleware - Configure Helmet for Vercel
@@ -111,6 +119,14 @@ app.use(`${config.apiPrefix}/customer/custom-cups`, customerCustomCupRoutes);
 app.use(`${config.apiPrefix}/customer/checkout`, customerCheckoutRoutes);
 app.use(`${config.apiPrefix}/customer/orders`, customerOrderRoutes);
 app.use(`${config.apiPrefix}/customer/settings`, customerSettingsRoutes);
+
+// Admin event booking routes
+app.use(`${config.apiPrefix}/admin/celebration-types`, adminCelebrationTypeRoutes);
+app.use(`${config.apiPrefix}/admin/event-bookings`, adminEventBookingRoutes);
+
+// Customer event booking routes
+app.use(`${config.apiPrefix}/customer/celebration-types`, customerCelebrationTypeRoutes);
+app.use(`${config.apiPrefix}/customer/event-bookings`, customerEventBookingRoutes);
 
 // Swagger documentation
 swaggerSetup(app);
