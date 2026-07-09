@@ -85,6 +85,144 @@ const options = {
             },
           },
         },
+        CupCategory: {
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            name: { type: "string" },
+            description: { type: "string" },
+            image: { type: "string" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Ingredient: {
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            type: {
+              type: "string",
+              enum: ["base", "chocolate_sauce", "nut", "extra"],
+            },
+            name: { type: "string" },
+            image: { type: "string" },
+            calories: { type: "number" },
+            price: { type: "number" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Cup: {
+          type: "object",
+          description:
+            "A menu cup. originalPrice/discountPercentage/priceAfterDiscount/totalCalories are computed once and stored permanently.",
+          properties: {
+            _id: { type: "string" },
+            name: { type: "string" },
+            description: { type: "string" },
+            image: { type: "string" },
+            category: { type: "string", description: "CupCategory ID (or populated object)" },
+            bases: { type: "array", items: { type: "string" } },
+            chocolateSauces: { type: "array", items: { type: "string" } },
+            nuts: { type: "array", items: { type: "string" } },
+            extras: { type: "array", items: { type: "string" } },
+            isManualPrice: { type: "boolean" },
+            originalPrice: { type: "number" },
+            discountPercentage: { type: "number" },
+            priceAfterDiscount: { type: "number" },
+            totalCalories: { type: "number" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        Order: {
+          type: "object",
+          description:
+            "An immutable snapshot of purchased items, fees, and delivery info at the time of checkout.",
+          properties: {
+            _id: { type: "string" },
+            orderNumber: { type: "string", example: "NNS-20260709-00001" },
+            user: { type: "string" },
+            items: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  itemType: { type: "string", enum: ["menu", "custom"] },
+                  quantity: { type: "integer" },
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  image: { type: "string" },
+                  categoryName: { type: "string" },
+                  originalPrice: { type: "number" },
+                  discountPercentage: { type: "number" },
+                  finalPrice: { type: "number" },
+                  totalCalories: { type: "number" },
+                  lineTotal: { type: "number" },
+                  ingredients: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        type: { type: "string" },
+                        image: { type: "string" },
+                        calories: { type: "number" },
+                        price: { type: "number" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            deliveryInfo: {
+              type: "object",
+              properties: {
+                fullName: { type: "string" },
+                email: { type: "string" },
+                phone: { type: "string" },
+                address: { type: "string" },
+                city: { type: "string" },
+                postalCode: { type: "string" },
+              },
+            },
+            paymentMethod: { type: "string", enum: ["cash", "card"] },
+            fees: {
+              type: "object",
+              properties: {
+                deliveryFee: {
+                  type: "object",
+                  properties: { enabled: { type: "boolean" }, amount: { type: "number" } },
+                },
+                packagingFee: {
+                  type: "object",
+                  properties: { enabled: { type: "boolean" }, amount: { type: "number" } },
+                },
+              },
+            },
+            itemsSubtotal: { type: "number" },
+            totalAmount: { type: "number" },
+            status: {
+              type: "string",
+              enum: ["pending", "preparing", "out_for_delivery", "delivered", "cancelled"],
+            },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        BusinessSettings: {
+          type: "object",
+          properties: {
+            deliveryFee: {
+              type: "object",
+              properties: { enabled: { type: "boolean" }, amount: { type: "number" } },
+            },
+            packagingFee: {
+              type: "object",
+              properties: { enabled: { type: "boolean" }, amount: { type: "number" } },
+            },
+          },
+        },
         Contact: {
           type: "object",
           properties: {
@@ -160,6 +298,54 @@ const options = {
       {
         name: "Contact",
         description: "Contact form endpoints",
+      },
+      {
+        name: "Admin - Cup Categories",
+        description: "Admin management of cup categories",
+      },
+      {
+        name: "Customer - Cup Categories",
+        description: "Browse cup categories",
+      },
+      {
+        name: "Admin - Ingredients",
+        description: "Admin management of cup ingredients (bases, chocolate sauces, nuts, extras)",
+      },
+      {
+        name: "Customer - Ingredients",
+        description: "Browse cup ingredients (bases, chocolate sauces, nuts, extras)",
+      },
+      {
+        name: "Admin - Cups Menu",
+        description: "Admin management of menu cups",
+      },
+      {
+        name: "Customer - Cups Menu",
+        description: "Browse, search, filter and sort menu cups",
+      },
+      {
+        name: "Customer - Custom Cup",
+        description: "Build and preview a custom cup",
+      },
+      {
+        name: "Admin - Orders",
+        description: "Admin order management",
+      },
+      {
+        name: "Customer - Orders",
+        description: "Checkout and order history",
+      },
+      {
+        name: "Admin - Business Settings",
+        description: "Admin management of delivery/packaging fee settings",
+      },
+      {
+        name: "Customer - Business Settings",
+        description: "Public business settings (delivery/packaging fees)",
+      },
+      {
+        name: "Admin - Dashboard",
+        description: "Admin dashboard statistics",
       },
     ],
   },

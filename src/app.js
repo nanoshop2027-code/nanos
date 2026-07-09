@@ -16,6 +16,23 @@ const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 
+// Admin commerce routes
+const adminCupCategoryRoutes = require('./routes/adminCupCategoryRoutes');
+const adminIngredientRoutes = require('./routes/adminIngredientRoutes');
+const adminCupRoutes = require('./routes/adminCupRoutes');
+const adminOrderRoutes = require('./routes/adminOrderRoutes');
+const adminSettingsRoutes = require('./routes/adminSettingsRoutes');
+const adminDashboardRoutes = require('./routes/adminDashboardRoutes');
+
+// Customer commerce routes
+const customerCupCategoryRoutes = require('./routes/customerCupCategoryRoutes');
+const customerIngredientRoutes = require('./routes/customerIngredientRoutes');
+const customerCupRoutes = require('./routes/customerCupRoutes');
+const customerCustomCupRoutes = require('./routes/customerCustomCupRoutes');
+const customerCheckoutRoutes = require('./routes/customerCheckoutRoutes');
+const customerOrderRoutes = require('./routes/customerOrderRoutes');
+const customerSettingsRoutes = require('./routes/customerSettingsRoutes');
+
 const app = express();
 
 // Security middleware
@@ -58,6 +75,23 @@ app.use(`${config.apiPrefix}/auth`, authRoutes);
 app.use(`${config.apiPrefix}/users`, userRoutes);
 app.use(`${config.apiPrefix}/admin`, adminRoutes);
 app.use(`${config.apiPrefix}/contact`, contactRoutes);
+
+// Admin commerce routes
+app.use(`${config.apiPrefix}/admin/categories`, adminCupCategoryRoutes);
+app.use(`${config.apiPrefix}/admin/ingredients`, adminIngredientRoutes);
+app.use(`${config.apiPrefix}/admin/cups`, adminCupRoutes);
+app.use(`${config.apiPrefix}/admin/orders`, adminOrderRoutes);
+app.use(`${config.apiPrefix}/admin/settings`, adminSettingsRoutes);
+app.use(`${config.apiPrefix}/admin/dashboard`, adminDashboardRoutes);
+
+// Customer commerce routes
+app.use(`${config.apiPrefix}/customer/categories`, customerCupCategoryRoutes);
+app.use(`${config.apiPrefix}/customer/ingredients`, customerIngredientRoutes);
+app.use(`${config.apiPrefix}/customer/cups`, customerCupRoutes);
+app.use(`${config.apiPrefix}/customer/custom-cups`, customerCustomCupRoutes);
+app.use(`${config.apiPrefix}/customer/checkout`, customerCheckoutRoutes);
+app.use(`${config.apiPrefix}/customer/orders`, customerOrderRoutes);
+app.use(`${config.apiPrefix}/customer/settings`, customerSettingsRoutes);
 
 // Swagger documentation
 swaggerSetup(app);
